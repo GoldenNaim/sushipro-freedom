@@ -1,0 +1,254 @@
+html {
+	height				:100%;
+	background			:#0a0b1f; 
+	background-repeat	:no-repeat;
+   	text-rendering		:geometricPrecision;
+   	overflow-x			:hidden;
+   	margin				:0px;
+   	margin-left			:0px;
+   	min-width			:1200px;
+}
+body {
+	font-family			:'Roboto', sans-serif;
+    color				:white;
+    margin				:0px;
+    min-width			:1200px;
+}
+
+input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
+  -webkit-appearance	:none;
+  margin				:0;
+}
+
+
+input[type=number] {
+  -moz-appearance		: textfield;
+}
+
+#marketLeft {
+	width				:220px;
+	border-right		:1px solid #ffffff30;
+	height				:100%;
+	position			:fixed;
+	
+}
+
+
+#searchMarket {
+	margin-top			:10px;
+	width				:210px;
+	margin-left			:auto;
+	margin-right		:auto;
+}
+
+.menu {
+	opacity				:0.7;
+	font-size			:14px;
+	cursor				:pointer;
+}
+
+.menu:hover {
+	opacity				:1;
+	color				:#5ab1e6;
+}
+
+.search {
+	background-color	:#ffffff30;
+	border				:0px;
+	border-radius		:5px;
+	padding				:5px;
+	margin-left			:5px;
+	width				:165px;
+	font-size			:12px;
+	cursor				:pointer;
+	margin-top			:9px;
+}
+
+.search:hover {
+	background-color	:#ffffff;
+	color				:black;
+	font-size			:12px;
+	outline				:0;
+}
+
+.search:focus {
+	background-color	:#ffffff;
+	color				:black;
+	font-size			:12px;
+	outline				:0;
+}
+
+#listMarket {
+	font-size			:12px;
+	margin-top			:10px;
+	width				:100%;
+}
+
+.marketList {
+	padding				:2px;
+	cursor				:pointer;
+}
+
+.marketList:hover {
+	background-color	:#ffffff50;
+}
+
+.ml2 {
+	background-color	:#ffffff20;
+}
+
+.up {
+	color				:#8cff8c;
+}
+
+.blue {
+	color				:#5ab1e6;
+}
+
+.trMenu:hover {
+	color				:#5ab1e6;
+	opacity				:1;
+}
+
+#buttonConnect {
+	background-color	:#253446;
+}
+#buttonConnect:hover {
+	background-color	:#104990;
+}
+
+#divLT:hover,#divLTBT:hover,#divOH:hover, #divLO:hover, #divMO:hover {
+	opacity				:1;
+	color				:#5ab1e6;
+}
+
+
+
+.btnConvert {
+	background-color	:#5ab1e6;
+	cursor				:pointer;
+}
+
+.btnConvert:hover {
+	background-color	:#07a1ff;
+	cursor				:pointer;
+}
+.bBuy {
+	cursor				:pointer;
+	background-color	:#26a69a;
+}
+
+.bBuy:hover {
+	background-color	:#26a653;
+}
+
+
+.bSell {
+	cursor				:pointer;
+	background-color	:#bf7474;
+}
+
+.bSell:hover {
+	background-color	:#ef6a6a;
+	
+}
+
+.btnSwitchVal {
+	font-size			:10px;
+	position			:absolute;
+	background-color	:#ffffff30;
+	padding				:2px;
+	border-radius		:2px;
+	cursor				:pointer;
+}
+
+.btnSwitchVal:hover {
+	background-color	:#5ab1e6;
+	color				:white;
+}
+
+#mainContent {
+	width				:auto;
+	margin-left			:221px;
+}
+
+#topBar {
+	position			:relative;
+	padding				:10px;
+}
+
+#slippageSlider .ui-slider-handle {
+    cursor				:pointer;
+    border-color		:#5ab1e6;
+    border-radius		:50px;
+    background-color	:#5ab1e6;
+    margin-top			: -2px;
+}
+
+#slippageSlider .ui-state-focus {
+    cursor				:pointer;
+    border-color		:#5ab1e6;
+    border-radius		:50px;
+    background-color	:#5ab1e6;
+}
+
+
+#maximumTimeSlider .ui-slider-handle {
+    cursor				:pointer;
+    border-color		:#5ab1e6;
+    border-radius		:50px;
+    background-color	:#5ab1e6;
+    margin-top			: -2px;
+}
+
+#maximumTimeSlider .ui-state-focus {
+    cursor				:pointer;
+    border-color		:#5ab1e6;
+    border-radius		:50px;
+    background-color	:#5ab1e6;
+}
+
+
+
+#marketBuySlider .ui-slider-handle, #marketSellSlider .ui-slider-handle {
+    cursor				:pointer;
+    border-color		:#5ab1e6;
+    border-radius		:50px;
+    background-color	:#5ab1e6;
+    margin-top			: -2px;
+    width				:30px;
+    text-align			:center;
+    text-shadow			:0px 1px 2px black;
+}
+
+#marketBuySlider .ui-state-focus, #marketSellSlider .ui-state-focus {
+    cursor				:pointer;
+    border-color		:#5ab1e6;
+    border-radius		:50px;
+    background-color	:#5ab1e6;
+}
+
+.miniPopup {
+	position			:absolute;
+	width				:300px;
+	padding				:10px;
+	border-radius		:10px;
+	height				:80px;
+	color				:white;
+	margin-top			:20px;
+	right				:20px;
+	background-color	:#071a31;
+	z-index				:999999;
+	font-size			:12px;
+	box-shadow			:0px 0px 10px #5ab1e6;
+}
+
+.miniLogo {
+	position			:absolute;
+	right				:10px;
+	cursor				:pointer;
+}
+
+.miniLogo:hover {
+	color				:#bf7474;
+}

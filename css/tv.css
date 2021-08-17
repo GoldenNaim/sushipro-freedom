@@ -1,0 +1,7 @@
+.theme-dark:root {
+	--tv-color-platform-background: #0a0b1f;
+	--tv-color-pane-background: #0a0b1f;
+	--tv-color-pane-background-secondary: #0a0b1f;
+	--tv-color-toolbar-button-text: #ffffff60;
+	--tv-color-item-active-text: rgb(6, 255, 6);
+}

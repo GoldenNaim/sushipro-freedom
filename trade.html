@@ -1,0 +1,463 @@
+<!DOCTYPE html> 
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"> 
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=1200 initial-scale=0, maximum-scale=0">  
+		<title>sushiPRO | Freedom extension </title>
+		<script type="text/javascript" src="js/font.js" crossorigin="anonymous"></script>		
+		<link href="./css/main.css" rel="stylesheet" />
+		<script src="./js/jquery.js" type="text/javascript"></script>
+		<link href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">		
+		<script type="text/javascript" src="./js/charting_library/charting_library.standalone.js"></script>
+		<script type="text/javascript" src="./js/datafeeds/udf/dist/polyfills.js"></script>
+		<script type="text/javascript" src="./js/datafeeds/udf/dist/bundle.js"></script>
+		<script type="text/javascript" src="./js/jui.js"></script>
+		<script type="text/javascript" src="./js/web3.min.js"></script>
+		
+		<link href="./css/jui.css" rel="stylesheet" />
+     	</style>
+	</head>
+	<body>
+		<input type="hidden" id="chainID"	value="1" autocomplete="off" />
+		<input type="hidden" id="chainName"	value="Ethereum" autocomplete="off" />
+		<input type="hidden" id="currentRouter" value="0xd9e1ce17f2641f24ae83637ab66a2cca9c378b9f" autocomplete="off" />
+		
+		<input type="hidden" id="updateInterval" value="120000" autocomplete="off" />
+		
+		<input type="hidden" id="baseToken" value="0" autocomplete="off" />
+		<input type="hidden" id="quoteToken" value="0" autocomplete="off" />
+		
+		<input type="hidden" id="baseReserve" value="0" autocomplete="off" />
+		<input type="hidden" id="quoteReserve" value="0" autocomplete="off" />
+		
+		<input type="hidden" id="baseDecimals" value="0" autocomplete="off" />
+		<input type="hidden" id="quoteDecimals" value="0" autocomplete="off" />
+		
+		<input type="hidden" id="baseTokenAllowance" value="0" autocomplete="off" />
+		<input type="hidden" id="quoteTokenAllowance" value="0" autocomplete="off" />
+		
+		<input type="hidden" id="selectedPair" value="0xceff51756c56ceffca006cd410b03ffc46dd3a58" autocomplete="off" />
+		<input type="hidden" id="eth_price" value="30" autocomplete="off"/>
+		<input type="hidden" id="eth_loaded" value="0" autocomplete="off" />
+		<input type="hidden" id="leftBar" value="0" autocomplete="off" />
+		<input type="hidden" id="slippageAllowed" value="1" autocomplete="off" />
+		<input type="hidden" id="maximumTimeAllowed" value="20" autocomplete="off" />
+		
+		<input type="hidden" id="isWalletConnected" value="0" autocomplete="off" />
+		<input type="hidden" id="walletChainID" value="0" autocomplete="off" />
+		
+		<input type="hidden" id="balanceBaseToken" value="0" autocomplete="off" />
+		<input type="hidden" id="balanceQuoteToken" value="0" autocomplete="off" />
+		
+		<input type="hidden" id="currentTx" value="0" autocomplete="off" />
+		<input type="hidden" id="currentExplorer" value="0" autocomplete="off" />
+		
+		<input type="hidden" id="wrappedETH" value="0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2" autocomplete="off" />
+		<input type="hidden" id="wrappedPLG" value="0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270" autocomplete="off" />
+		<input type="hidden" id="wrappedFTM" value="0x21be370d5312f44cb42ce377bc9b8a0cef1a4c83" autocomplete="off" />
+		
+	<div class="miniPopup" style="display:none;">
+		<span class="miniLogo" onClick="$(this).parent().hide();" ><i class="fal fa-times-circle"></i></span>
+		<span class="miniTitle"></span>
+		<br/><br/>
+		<span class="miniPrelink">You can view your transaction here : </span><a id="miniLink" href="#" class="blue" style="text-decoration:none;"></a><br/>
+		<span class="miniText"></span>
+	</div>
+	
+	<div id="marketLeft">
+		<div id="searchMarket">
+			<table border="0">
+				<tr>
+					<td style="padding-left:5px;">
+						<img src="./img/logo.png" style="width:18px;float:left;" /> 
+					</td>
+					<td style="padding-left:5px;">
+						<span style="font-size:12px;">sushi<b>PRO</b> | <span style="opacity:0.8;">Freedom extension</span></span>
+					</td>
+				</tr>
+			</table>
+			&nbsp;
+			<i class="fas fa-bars menu" id="menuLeft" onClick="openLeftMenu();" ></i> <input id="inputSearchMarket" class="search" type="text" placeholder="Search a market, a token..." />
+		</div>
+		
+		<table id="listMarket" border="0">
+		</table>
+		
+		<div id="listSettings" style="display:none;font-size:12px;padding:5px;margin-top:5px;">
+			<span style="border-left:3px solid #5ab1e6;margin-top:3px;padding-left:3px;">Network available</span>
+			<br/><br/>
+			<table border="0" style="width:100%;">
+				<tr id="menuETH" class="trMenu" style="cursor:pointer;" onClick="changeChain(1);" >
+					<td><i class="fab fa-ethereum"></i></td>
+					<td style="padding-left:5px;">Ethereum</td>
+					<td style="padding-left:5px;"  dir="rtl" id="checkMenuETH" ><i class="far fa-check blue"></i></td>
+				</tr>
+				<tr id="menuPLG" class="trMenu" style="cursor:pointer;opacity:0.7;" onClick="changeChain(137);">
+					<td><img src="./img/matic.png" style="width:10px;" /></td>
+					<td style="padding-left:5px;">Polygon</td>
+					<td style="padding-left:5px;"  dir="rtl" id="checkMenuPLG"></td>
+				</tr>
+				<tr id="menuFTM" class="trMenu" style="cursor:pointer;opacity:0.7;" onClick="changeChain(250);">
+					<td><img src="./img/fantom.png" style="width:10px;" /></td>
+					<td style="padding-left:5px;">Fantom</td>
+					<td style="padding-left:5px;"  dir="rtl" id="checkMenuFTM"></td>
+				</tr>
+			</table>
+			<br/><br/>
+			<span style="border-left:3px solid #5ab1e6;margin-top:3px;padding-left:3px;">Swap parameters</span>
+			<br/><br/>
+			Current allowed slippage : <b><span id="slippageTolerance">1</span>%</b>
+			<br/>
+			<div id="slippageSlider" style="height: 7px; border-radius: 10px;margin-left:0px;margin-top:7px;width:95%;background-color: #ffffff30;border: 0px;"></div>
+		
+			<br/>
+			Maximum time : <b><span id="maximumTime">20</span>min</b>
+			<br/>
+			<div id="maximumTimeSlider" style="height: 7px; border-radius: 10px;margin-left:0px;margin-top:7px;width:95%;background-color: #ffffff30;border: 0px;"></div>
+			
+			<br/>
+			Recipient
+			<br/>
+			<input id="swapRecipient" class="search" style="font-size:8px;margin-left:0px;width:190px;" type="text" placeholder="Your address by default" />
+		
+			<br/><br/>
+			<span style="border-left:3px solid #5ab1e6;margin-top:3px;padding-left:3px;">Wallet</span>
+			<br/><br/>
+			<table border="0" style="width:200px;">
+				<tr>
+					<td>You are </td>
+					<td dir="rtl"><span id="statusWallet" style="color:#bf7474;">disconnected</span></td>
+				</tr>
+				<tr>
+					<td>Current network </td>
+					<td dir="rtl"><span id="networkWallet">...</span></td>
+				</tr>
+			</table>
+			<br/>
+			<div id="buttonConnect" onClick="connectMyWallet();" style="margin-top:10px;cursor:pointer;color:white;padding:10px;width:180px;text-align:center;height:15px;border-radius:10px;">
+			Connect your wallet
+			</div>
+		</div>
+		
+	</div>
+	
+	<div id="mainContent">
+		<div id="topBar">
+			<div style="position:absolute;right:10px;margin-top:3px;">
+				<table border="0" dir="rtl">
+				<tr>
+					<td style="line-height:13px;">
+						<div id="barUSDPrice">
+							<span class="blue" style="font-size:13px;"><b>USD Price</b></span> <br/>
+							<span style="font-size:10px;" dir="ltr" id="topUSDPrice" ><i style="color:white;" class="far fa-sync-alt fa-spin"></i></span>
+						</div>
+					</td>
+				</tr>
+				</table>
+			</div>
+			<table border="0">
+				<tr>
+					<td style="line-height:13px;">
+						<div id="barPairName">
+							<span class="blue" style="font-size:13px;" id="topPairSymbol"><i style="color:#5ab1e6;" class="far fa-sync-alt fa-spin"></i></span><br/>
+							<span style="font-size:10px;" id="topPairName"><i style="color:white;" class="far fa-sync-alt fa-spin"></i></span>
+						</div>
+					</td>
+					
+					<td style="padding-left:20px;line-height:13px;opacity:0.8;">
+						<span class="blue" style="font-size:13px;">Network</span> <br/>
+						<span style="font-size:10px;opacity:0.8;" id="topChainName"><i style="color:white;" class="far fa-sync-alt fa-spin"></i></span>
+					</td>
+					<td style="padding-left:20px;line-height:13px;opacity:0.8;">
+						<div id="barPrice">
+							<span class="blue" style="font-size:13px;">Price</span> <br/>
+							<span style="font-size:10px;opacity:0.8;" id="topPrice"><i style="color:white;" class="far fa-sync-alt fa-spin"></i></span>
+							
+						</div>
+					</td>
+					<td style="padding-left:20px;line-height:13px;opacity:0.8;">
+						<span class="blue" style="font-size:13px;">Liquidity</span> <br/>
+						<span style="font-size:10px;opacity:0.8;" id="topLiquidity"><i style="color:white;" class="far fa-sync-alt fa-spin"></i></span>
+					</td>
+				</tr>
+			</table>
+		</div>
+	
+		<div id="contentChart" style="z-index:99999;overflow:auto;width:100%;height:500px;border-top:1px solid #ffffff30;border-bottom:1px solid #ffffff30;">
+			<div id="mainChart" style="height:100%;position:relative;width:100%;">
+			</div>
+		</div>
+		
+		<div id="secondBlock" style="width:100%;position:relative;">
+			<div id="subSecondLeft" style="position:absolute;width:50%;">
+				<table border="0" style="width:100%;">
+				<tr>
+					<td valign="top" style="font-size:12px;padding:5px;width:100%;">
+						<div id="divOH" style="width:100%;position:relative;opacity:0.7;padding-bottom:5px;border-bottom:3px solid #5ab1e6;">
+							<input id="openOH" type="hidden" autocomplete="off" value="0" />
+							<div id="arrowOrderHistory"  onClick="viewMenu(3);" style="position:absolute;margin-left:0px;cursor:pointer;">
+								<i class="far fa-angle-right" style="font-size:10px;"></i>
+								<span style="font-size:8px;position:absolute;margin-top:2px;margin-left:3px;">open</span>
+							</div>
+							<center onClick="viewMenu(3);" style="cursor:pointer;">Order history</center>
+						</div>
+					</td>
+				</tr>
+				<tr id="trOH" style="display:none;">
+					<td valign="top" style="font-size:12px;padding:5px;">
+					<div style="overflow-y: scroll;height:150px;">
+						<table id="lastOrderHistory" style="width:100%;">
+							<tr>
+								<td style="text-align:left;font-size:10px;">Date</td>
+								<td style="text-align:left;font-size:10px;">Side</td>
+								<td style="text-align:left;font-size:10px;">Pair</td>
+								<td style="text-align:left;font-size:10px;">Amount</td>
+								<td style="text-align:left;font-size:10px;">Price</td>
+								<td style="text-align:left;font-size:10px;">Volume</td>
+							</tr>
+						</table>
+					</div>
+					</td>
+				</tr>
+				</table>
+			
+				<table border="0" style="width:100%;">
+				<tr>
+					<td valign="top" style="font-size:12px;padding:5px;width:100%;">
+						<div id="divLTBT" style="width:100%;position:relative;opacity:0.7;padding-bottom:5px;border-bottom:3px solid #5ab1e6;">
+							<input id="openLTBT" type="hidden" autocomplete="off" value="0" />
+							<div id="arrowLastTradeByToken" onClick="viewMenu(2);" style="position:absolute;margin-left:0px;cursor:pointer;">
+								<i class="far fa-angle-right" style="font-size:10px;"></i>
+								<span style="font-size:8px;position:absolute;margin-top:2px;margin-left:3px;">open</span>
+							</div>
+							<center onClick="viewMenu(2);" style="cursor:pointer;">Trade by token</center>
+						</div>
+					</td>
+				</tr>
+				
+				<tr id="trLTBT" style="display:none;">
+					<td valign="top" style="font-size:12px;padding:5px;">
+					<div style="overflow-y: scroll;height:150px;">
+						<table id="lastTradeByToken" style="display:none;width:100%;">
+							<tr>
+								<td style="text-align:left;font-size:10px;">Time</td>
+								<td style="text-align:left;font-size:10px;">Base price </td>
+								<td style="text-align:left;font-size:10px;">Quote price </td>
+								<td style="text-align:left;font-size:10px;">Amount</td>
+								<td style="text-align:left;font-size:10px;">Volume</td>
+							</tr>
+						</table>
+					</div>
+					</td>
+				</tr>
+				
+				
+				</table>
+			
+			
+			
+				<table border="0" style="width:100%;">
+				<tr>
+					<td valign="top" style="font-size:12px;padding:5px;width:50%;">
+						<div id="divLT" style="width:100%;position:relative;padding-bottom:5px;border-bottom:3px solid #5ab1e6;">
+							<input id="openLT" type="hidden" autocomplete="off" value="1" />
+							<div class="btnSwitchVal" style="right:53px;" onClick="loadTradePair($('#selectedPair').val(), 'USD'); ">USD</div>
+							<div class="btnSwitchVal" style="right:1px;" onClick="loadTradePair($('#selectedPair').val(), 'ETH');" >RELATIVE</div>
+							<div id="arrowLastTrade"  onClick="viewMenu(1);" style="position:absolute;margin-left:0px;cursor:pointer;">
+								<i class="far fa-angle-down" style="font-size:10px;"></i>
+								<span style="font-size:8px;position:absolute;margin-top:2px;margin-left:3px;">close</span>
+							</div>
+							<center onClick="viewMenu(1);" style="cursor:pointer;">Last trade</center>
+						</div>
+					</td>
+				</tr>
+				<tr id="trLT" >
+					<td valign="top" style="font-size:12px;padding:5px;">
+					<div style="overflow-y: scroll;height:150px;">
+						<table id="lastTradePair" style="width:100%;">
+							<tr>
+								<td style="text-align:left;font-size:10px;">Time</td>
+								<td style="text-align:left;font-size:10px;">Base price </td>
+								<td style="text-align:left;font-size:10px;">Quote price </td>
+								<td style="text-align:left;font-size:10px;">Amount</td>
+								<td style="text-align:left;font-size:10px;">Volume</td>
+							</tr>
+						</table>
+					</div>
+					</td>
+				</tr>
+				</table>
+			</div>
+			
+			
+			<!-- right !-->
+			<div id="subSecondRight" style="position:absolute;width:50%;margin-left:50%;">
+			
+				<table border="0" style="width:100%;">
+				<tr>
+					<td valign="top" style="font-size:12px;padding:5px;width:100%;">
+						<div id="divCV"  style="width:100%;position:relative;opacity:0.7;padding-bottom:5px;border-bottom:3px solid #5ab1e6;">
+							<input id="openCV" type="hidden" autocomplete="off" value="0" />
+							<div id="arrowConverter"  onClick="viewMenu(6);" style="position:absolute;margin-left:0px;cursor:pointer;">
+								<i class="far fa-angle-right" style="font-size:10px;"></i>
+								<span style="font-size:8px;position:absolute;margin-top:2px;margin-left:3px;">open</span>
+							</div>
+							<center id="titleWrap" onClick="viewMenu(6);" style="cursor:pointer;">Convert ETH to WETH </center>
+						</div>
+					</td>
+				</tr>
+				<tr id="trCV" style="display:none;">
+					
+					<td valign="top" style="font-size:12px;padding:5px;">
+						<div style="width:45%;float:left;margin-left:2.5%;">
+							<center><span id="spanWrap" style="font-size:12px;">Convert ETH to WETH</span></center>
+							<div style="background-color:white;border-radius:5px;padding:5px;margin-top:5px;">
+								<span  id="convertBase" style="background-color:#25526d;padding:3px;font-size:10px;border-radius:3px;">ETH</span>
+  								<input id="amount_WRAP" type="number" style="padding:5px;outline:0;width:70%;border:0px;font-size:12px;" placeholder="Quantity"/>
+							</div>
+							
+							<div id="convertButton1" onClick="convert(1);"  class="btnConvert" style="padding:10px;margin-top:10px;text-align:center;color:white;">
+								WRAP
+							</div>
+							
+						</div>
+						
+						<div style="width:45%;float:left;margin-left:7.5%;">
+							<center><span id="spanUnwrap" style="font-size:12px;">Convert WETH to ETH</span></center>
+							<div style="background-color:white;border-radius:5px;padding:5px;margin-top:5px;">
+								<span  id="convertQuote" style="background-color:#25526d;padding:3px;font-size:10px;border-radius:3px;">WETH</span>
+  								<input id="amount_UNWRAP"  type="number" style="padding:5px;outline:0;width:70%;border:0px;font-size:12px;" placeholder="Quantity"/>
+							</div>
+							
+							
+							<div id="convertButton2"  onClick="convert(2);" class="btnConvert" style="padding:10px;margin-top:10px;text-align:center;color:white;">
+								UNWRAP
+							</div>
+							
+						</div>
+					</td>
+				</tr>
+				</table>
+				
+				
+				<table border="0" style="width:100%;">
+				<tr>
+					<td valign="top" style="font-size:12px;padding:5px;width:100%;">
+						<div id="divLO"  style="width:100%;position:relative;opacity:0.7;padding-bottom:5px;border-bottom:3px solid #5ab1e6;">
+							<input id="openLO" type="hidden" autocomplete="off" value="0" />
+							<div id="arrowLimitOrder"  onClick="viewMenu(4);" style="position:absolute;margin-left:0px;cursor:pointer;">
+								<i class="far fa-angle-right" style="font-size:10px;"></i>
+								<span style="font-size:8px;position:absolute;margin-top:2px;margin-left:3px;">open</span>
+							</div>
+							<center onClick="viewMenu(4);" style="cursor:pointer;">Limit order ( available soon )</center>
+						</div>
+					</td>
+				</tr>
+				</table>
+				
+				<table border="0" style="width:100%;">
+				<tr>
+					<td valign="top" style="text-align:center;font-size:12px;padding:5px;width:50%;">
+					
+						<div id="divMO" class="tbOpac"  style="width:100%;position:relative;padding-bottom:5px;border-bottom:3px solid #5ab1e6;">
+							<input id="openMO" type="hidden" autocomplete="off" value="1" />
+							<div class="btnSwitchVal" style="right:1px;">Fees : 0.3% / hop</div>
+							<div id="arrowMarketOrder"  onClick="viewMenu(5);" style="position:absolute;margin-left:0px;cursor:pointer;">
+								<i class="far fa-angle-down" style="font-size:10px;"></i>
+								<span style="font-size:8px;position:absolute;margin-top:2px;margin-left:3px;">close</span>
+							</div>
+							<center onClick="viewMenu(5);" style="cursor:pointer;">Market order</center>
+						</div>
+					</td>
+				</tr>
+				<tr id="trMO">
+					
+					<td valign="top" style="font-size:12px;padding:5px;">
+						<div style="width:45%;float:left;margin-left:2.5%;">
+							<center><span style="font-size:12px;">Buy at the current market price</span></center>
+							<div style="background-color:white;border-radius:5px;padding:5px;margin-top:5px;">
+								<span  id="marketBuyBase" style="background-color:#25526d;padding:3px;font-size:10px;border-radius:3px;">WETH</span>
+  								<input id="amount_marketBuyBase" type="number" style="padding:5px;outline:0;width:70%;border:0px;font-size:12px;" placeholder="Quantity"/>
+							</div>
+							
+							<div id="marketBuySlider" style="height: 7px; border-radius: 10px;margin-left:10px;margin-top:12px;width:90%;background-color: #ffffff30;border: 0px;"></div>
+							
+							
+							<div style="background-color:white;border-radius:5px;padding:5px;margin-top:12px;">
+								<span  id="marketBuyQuote" style="background-color:#25526d;padding:3px;font-size:10px;border-radius:3px;">WBTC</span>
+  								<input id="amount_marketBuyQuote" type="number" disabled style="padding:5px;outline:0;width:70%;border:0px;font-size:12px;" placeholder="You will receive..."/>
+							</div>
+							
+							<div id="buttonMarketBuy" onClick="swapNow(1);" class="bBuy" style="padding:10px;margin-top:10px;text-align:center;color:white;">
+								BUY
+							</div>
+							
+						</div>
+						
+						<div style="width:45%;float:left;margin-left:7.5%;">
+							<center><span style="font-size:12px;">Sell at the current market price</span></center>
+							<div style="background-color:white;border-radius:5px;padding:5px;margin-top:5px;">
+								<span  id="marketSellBase" style="background-color:#25526d;padding:3px;font-size:10px;border-radius:3px;">WBTC</span>
+  								<input id="amount_marketSellBase"  type="number" style="padding:5px;outline:0;width:70%;border:0px;font-size:12px;" placeholder="Quantity"/>
+							</div>
+							
+							
+							<div id="marketSellSlider" style="height: 7px; border-radius: 10px;margin-left:10px;margin-top:12px;width:90%;background-color: #ffffff30;border: 0px;"></div>
+							
+							
+							<div style="background-color:white;border-radius:5px;padding:5px;margin-top:12px;">
+								<span  id="marketSellQuote" style="background-color:#25526d;padding:3px;font-size:10px;border-radius:3px;">WETH</span>
+  								<input id="amount_marketSellQuote" type="number" disabled style="padding:5px;outline:0;width:70%;border:0px;font-size:12px;" placeholder="You will receive..."/>
+							</div>
+							
+							<div id="buttonMarketSell" class="bSell" onClick="swapNow(2);" style="padding:10px;margin-top:10px;text-align:center;color:white;">
+								SELL
+							</div>
+							
+						</div>
+					</td>
+				</tr>
+			</table>
+			
+				
+			</div>
+		</div>
+		
+	</div>
+	
+	
+	
+	<script>
+		var widget = window.tvWidget = new TradingView.widget({
+					fullscreen: false,
+					symbol: 'WBTCWETH',
+					interval: '60',
+					container: 'mainChart',
+					height: '100%',
+					timeframe:'3D',
+					timezone: 'Etc/UTC',
+					width: '100%',
+					datafeed: new Datafeeds.UDFCompatibleDatafeed('https://mrxuvcyuh2.execute-api.us-east-1.amazonaws.com/',10000),
+					library_path: 'js/charting_library/',
+					locale:'en',
+					theme: 'Dark',
+					custom_css_url: '../../css/tv.css',
+					overrides: {
+    					"mainSeriesProperties.style": 3,
+					},
+		});
+		
+		widget.onChartReady(function() {
+			tvWidget.applyOverrides({ 
+				"mainSeriesProperties.style": 3,
+				"paneProperties.backgroundType": 'solid',
+				"paneProperties.background": '#0a0b1f'
+				});
+		});
+					
+	</script>
+	</body>
+			
+	<script src="./js/main.js" type="text/javascript"></script>
+	<script src="./js/manager.js" type="text/javascript"></script>
+</html>
